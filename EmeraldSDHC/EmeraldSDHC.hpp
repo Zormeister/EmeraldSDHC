@@ -18,6 +18,21 @@
 
 typedef void (*EmeraldSDHCSlotInterruptAction)(void *target);
 
+/* ZORMEISTER: This is based from Linux. tyvm to the maintainers over there. */
+enum struct EmeraldDeviceType {
+  GenericSD = 0,
+  MMC       = 1,
+  SDIO      = 2,
+};
+
+struct EmeraldDeviceFilterListEntry {
+  const char *acpi_hid;
+  const char *acpi_uid;
+  UInt16 pci_venid;
+  UInt16 pci_devid;
+  EmeraldDeviceType device_type;
+};
+
 class EmeraldSDHCSlot;
 
 class EmeraldSDHC : public IOService {
@@ -48,6 +63,7 @@ public:
   //
   // IOService overrides.
   //
+  IOService *probe(IOService *provider, SInt32 *score) APPLE_KEXT_OVERRIDE;
   bool start(IOService *provider) APPLE_KEXT_OVERRIDE;
   void stop(IOService *provider) APPLE_KEXT_OVERRIDE;
   IOWorkLoop *getWorkLoop() const APPLE_KEXT_OVERRIDE;
